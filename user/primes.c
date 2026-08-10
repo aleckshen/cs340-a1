@@ -2,6 +2,8 @@
 #include "kernel/stat.h"
 #include "user/user.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winfinite-recursion"
 void sieve(int rfd)
 {
     int prime;
@@ -44,6 +46,7 @@ void sieve(int rfd)
         exit(0);
     }
 }
+#pragma GCC diagnostic pop
 
 int main(int argc, char *argv[])
 {
