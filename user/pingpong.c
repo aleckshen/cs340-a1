@@ -1,8 +1,9 @@
-#include "kernel/stat.h"
 #include "kernel/types.h"
+#include "kernel/stat.h"
 #include "user/user.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   int p2c0[2]; // parent -> child 0
   int p2c1[2]; // parent -> child 1
   int c2p0[2]; // child 0 -> parent
@@ -17,7 +18,8 @@ int main(int argc, char *argv[]) {
 
   // fork child 0
   int pid0 = fork();
-  if (pid0 == 0) {
+  if (pid0 == 0)
+  {
     // close pipe ends this child doesn't use
     close(p2c0[1]);
     close(c2p0[0]);
@@ -35,7 +37,8 @@ int main(int argc, char *argv[]) {
 
   // fork child 1
   int pid1 = fork();
-  if (pid1 == 0) {
+  if (pid1 == 0)
+  {
     close(p2c1[1]);
     close(c2p1[0]);
     close(p2c0[0]);
