@@ -138,6 +138,7 @@ UPROGS=\
 	$U/_rm\
 	$U/_sh\
 	$U/_touch\
+	$U/_pingpong\
 	$U/_stressfs\
 	$U/_usertests\
 	$U/_grind\
