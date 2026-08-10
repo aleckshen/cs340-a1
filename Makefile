@@ -140,6 +140,7 @@ UPROGS=\
 	$U/_touch\
 	$U/_pingpong\
 	$U/_findppid\
+	$U/_primes\
 	$U/_stressfs\
 	$U/_usertests\
 	$U/_grind\
