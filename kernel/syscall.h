@@ -25,3 +25,5 @@
 #define SYS_waitx 23
 #define SYS_execp 24
 #define SYS_getppid 25
+#define SYS_setpri 26
+#define SYS_getpinfo 27

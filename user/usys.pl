@@ -47,3 +47,5 @@ entry("uptime");
 entry("getwaittime");
 entry("waitx");
 entry("execp");
+entry("setpri");
+entry("getpinfo");

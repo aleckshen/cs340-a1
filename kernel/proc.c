@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "pinfo.h"
 
 struct cpu cpus[NCPU];
 
@@ -124,9 +125,11 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
-  p->priority = 10;
+  p->priority = 1;
   p->runnable_ticks = 0;
   p->sleeping_ticks = 0;
+  p->ticks[0] = 0;
+  p->ticks[1] = 0;
 
   // Allocate a trapframe page.
   if ((p->trapframe = (struct trapframe *)kalloc()) == 0) {
@@ -813,6 +816,9 @@ update_process_times(void)
     else if (p->state == SLEEPING) {
       p->sleeping_ticks++;
     }
+    else if (p->state == RUNNING && (p->priority == 1 || p->priority == 2)) {
+      p->ticks[p->priority - 1]++;
+    }
 
     release(&p->lock);
   }
@@ -895,4 +901,48 @@ kwaitx(uint64 addr, uint64 rtime_addr, uint64 stime_addr)
 
     sleep(p, &wait_lock);
   }
+}
+
+// Change the calling process's scheduling priority.
+// Valid priorities are 1 (low) and 2 (high).
+// Returns 0 on success, -1 for an invalid priority.
+int
+ksetpri(int n)
+{
+  if (n != 1 && n != 2)
+    return -1;
+
+  struct proc *p = myproc();
+  acquire(&p->lock);
+  p->priority = n;
+  release(&p->lock);
+  return 0;
+}
+
+// Fill in a struct pinfo describing every process slot and
+// copy it out to the user-supplied address.
+// Returns 0 on success, -1 if the pointer is bad.
+int
+kgetpinfo(uint64 addr)
+{
+  struct proc *p = myproc();
+  struct pinfo pi;
+  struct proc *pp;
+  int i;
+
+  i = 0;
+  for (pp = proc; pp < &proc[NPROC]; pp++) {
+    acquire(&pp->lock);
+    pi.inuse[i] = (pp->state != UNUSED);
+    pi.pid[i] = pp->pid;
+    pi.priority[i] = pp->priority;
+    pi.ticks[i][0] = pp->ticks[0];
+    pi.ticks[i][1] = pp->ticks[1];
+    release(&pp->lock);
+    i++;
+  }
+
+  if (copyout(p->pagetable, addr, (char *)&pi, sizeof(pi)) < 0)
+    return -1;
+  return 0;
 }

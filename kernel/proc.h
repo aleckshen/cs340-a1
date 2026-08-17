@@ -109,4 +109,5 @@ struct proc {
   int priority;
   uint runnable_ticks;
   uint sleeping_ticks;
+  uint ticks[2]; // time spent RUNNING at priority 1 (ticks[0]) and priority 2 (ticks[1])
 };

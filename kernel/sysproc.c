@@ -168,3 +168,21 @@ sys_waitx(void)
 
   return kwaitx(addr, rtime_addr, stime_addr);
 }
+
+uint64
+sys_setpri(void)
+{
+  int n;
+
+  argint(0, &n);
+  return ksetpri(n);
+}
+
+uint64
+sys_getpinfo(void)
+{
+  uint64 addr;
+
+  argaddr(0, &addr);
+  return kgetpinfo(addr);
+}

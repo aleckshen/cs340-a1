@@ -108,6 +108,8 @@ extern struct spinlock wait_lock;
 void            update_process_times(void);
 int             kgetwaitstats(int, uint*, uint*);
 int             kwaitx(uint64, uint64, uint64);
+int             ksetpri(int);
+int             kgetpinfo(uint64);
 
 // swtch.S
 void            swtch(struct context*, struct context*);
